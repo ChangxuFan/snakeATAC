@@ -42,11 +42,11 @@ Note the logic of snakemake: the pipeline is dictated by what you specify as out
 ### input:
 * `fastq/${sample}_R1.fastq.gz`; `fastq/${sample}_R2.fastq.gz`
 ### possible outputs:
-* full output: `snake_res/${sample}_AS0_mapq8_rmdup_full.txt`
+* full output (ATAC only): `snake_res/${sample}_AS0_mapq8_full.txt`
     * AS0: only retain reads that matches the references perfectly.
     * mapq8: only retain reads with mapq > 8.
-    * rmdup: remove PCR duplicates.
-* partial output can be specified to skip some steps. For example, when aligning human data you probably want to specify `snake_res/${sample}_mapq8_rmdup_full.txt` and skip the AS0 filtering since humans have SNPs.
+    * Note that `full` indicates that `methylQA` will be run, which removes PCR duplicates.
+* partial output can be specified to skip some steps. For example, when aligning human data you probably want to specify `snake_res/${sample}_mapq8_full.txt` and skip the AS0 filtering since humans have SNPs.
 * ChIP/Cut&Run vs ATAC: 
     * the pipeline is by default for ATAC data. After alignment, methylQA (by Daofeng Li) is used for Tn5 cutsite identification and PCR duplicate removal.
     * for ChIP/Cut&Run, specify `chip` such as `snake_res/${sample}_mapq8_rmdup_chip.txt`. This will skip the methylQA step. Deduplication is instead performed by `sambamba`.
