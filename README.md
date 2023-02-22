@@ -46,10 +46,18 @@ Note the logic of snakemake: the pipeline is dictated by what you specify as out
     * AS0: only retain reads that matches the references perfectly.
     * mapq8: only retain reads with mapq > 8.
     * Note that `full` indicates that `methylQA` will be run, which removes PCR duplicates.
+    * Note that the post methylQA filter files that you want have the `_mqa` tag on them.
 * partial output can be specified to skip some steps. For example, when aligning human data you probably want to specify `snake_res/${sample}_mapq8_full.txt` and skip the AS0 filtering since humans have SNPs.
-* ChIP/Cut&Run vs ATAC: 
+* `chip` mode: 
     * the pipeline is by default for ATAC data. After alignment, methylQA (by Daofeng Li) is used for Tn5 cutsite identification and PCR duplicate removal.
     * for ChIP/Cut&Run, specify `chip` such as `snake_res/${sample}_mapq8_rmdup_chip.txt`. This will skip the methylQA step. Deduplication is instead performed by `sambamba`.
+* `simple` mode: 
+    * same as `chip` mode. The only difference is that the `{sample}_cov_None_1.bw` is not a part of the output.
+
+### other options:
+* `cutadapt` can be skipped by adding the flag `--config --nocutadapt=true` in the snakemake call.
+* if you want to only mark the duplicates without filtering them out (e.g. for single end libraries), use `_mkdup` instead of `_rmdup`.
+* filter for reads with certain template lengths (might be useful for TF cut&run): add `_frag${size}up` or `_frag${size}down` to only retain reads from templates that are longer or shorter than `${size}`. When up or down is omitted, default to down. e.g.: `WTfix_mapq8_rmdup_frag120_chip.txt`
 
 ### running the pipeline:
 Most common example:
